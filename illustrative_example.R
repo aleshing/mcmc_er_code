@@ -256,17 +256,51 @@ ess_plot <- ess_plot %>% mutate(time = time - warmup,
 summary_output_burn %>%
   filter(mcmc %in% c("Gibbs", "Nonuniform Chaperones",
                      "Nonuniform Chaperones with Gibbs, 5000") &
+           variable %in% c("num_clust", "binder_1")) %>%
+  mutate(mcmc  = recode(mcmc,
+                        `Gibbs` = "G",
+                        `Nonuniform Chaperones` = "C",
+                        `Nonuniform Chaperones with Gibbs, 5000` = "C + G"),
+         variable  = recode(variable,
+                            num_clust = "# of Clusters",
+                            binder_1 = "Binder 1")) %>%
+  select(mcmc, variable, mean, q5, q95, rhat, ess_bulk) %>%
+  rename(Summary = variable, Mean = mean, Lower = q5, Upper = q95,
+         Rhat = rhat, ESS = ess_bulk, Sampler = mcmc) %>%
+  xtable(digits = 2) %>% print(include.rownames = FALSE)
+
+summary_output_burn %>%
+  filter(mcmc %in% c("Gibbs", "Nonuniform Chaperones",
+                     "Nonuniform Chaperones with Gibbs, 5000") &
+           variable %in% c("num_clust", "binder_1")) %>%
+  mutate(mcmc  = recode(mcmc,
+                        `Gibbs` = "G",
+                        `Nonuniform Chaperones` = "C",
+                        `Nonuniform Chaperones with Gibbs, 5000` = "C + G"),
+         variable  = recode(variable,
+                            num_clust = "# of Clusters",
+                            binder_1 = "Binder 1")) %>%
+  select(mcmc, variable, mean, q5, q95, rhat, ess_bulk) %>%
+  rename(Summary = variable, Mean = mean, Lower = q5, Upper = q95,
+         Rhat = rhat, ESS = ess_bulk, Sampler = mcmc) %>%
+  xtable(digits = -2) %>% print(include.rownames = FALSE)
+
+# Old full table
+summary_output_burn %>%
+  filter(mcmc %in% c("Gibbs", "Nonuniform Chaperones",
+                     "Nonuniform Chaperones with Gibbs, 5000") &
            !(variable %in% c("X000"))) %>%
   mutate(mcmc  = recode(mcmc,
-                        `Nonuniform Chaperones` = "Chaperones",
-                        `Nonuniform Chaperones with Gibbs, 5000` = "Chaperones + Gibbs"),
+                        `Gibbs` = "G",
+                        `Nonuniform Chaperones` = "C",
+                        `Nonuniform Chaperones with Gibbs, 5000` = "C + G"),
          variable  = recode(variable,
                             num_clust = "# of Clusters",
                             binder_1 = "Binder 1",
                             binder_2 = "Binder 2",
                             binder_3 = "Binder 3",
                             binder_4 = "Binder 4")) %>%
-  select(variable, mean, q5, q95, rhat, ess_bulk, mcmc) %>%
+  select(mcmc, variable, mean, q5, q95, rhat, ess_bulk) %>%
   rename(Summary = variable, Mean = mean, Lower = q5, Upper = q95,
          Rhat = rhat, ESS = ess_bulk, Sampler = mcmc) %>%
   xtable() %>% print(include.rownames = FALSE)
@@ -276,15 +310,16 @@ summary_output_burn %>%
                      "Nonuniform Chaperones with Gibbs, 5000") &
            !(variable %in% c("X000"))) %>%
   mutate(mcmc  = recode(mcmc,
-                        `Nonuniform Chaperones` = "Chaperones",
-                        `Nonuniform Chaperones with Gibbs, 5000` = "Chaperones + Gibbs"),
+                        `Gibbs` = "G",
+                        `Nonuniform Chaperones` = "C",
+                        `Nonuniform Chaperones with Gibbs, 5000` = "C + G"),
          variable  = recode(variable,
                             num_clust = "# of Clusters",
                             binder_1 = "Binder 1",
                             binder_2 = "Binder 2",
                             binder_3 = "Binder 3",
                             binder_4 = "Binder 4")) %>%
-  select(variable, mean, q5, q95, rhat, ess_bulk, mcmc) %>%
+  select(mcmc, variable, mean, q5, q95, rhat, ess_bulk) %>%
   rename(Summary = variable, Mean = mean, Lower = q5, Upper = q95,
          Rhat = rhat, ESS = ess_bulk, Sampler = mcmc) %>%
   xtable(digits = -2) %>% print(include.rownames = FALSE)

@@ -278,6 +278,8 @@ ess_plot <- ess_plot %>% mutate(time = time - warmup,
                                 time = time * 4, 
                                 ess_time = ess / time)
 
+ess_plot <- ess_plot %>% mutate(time = time / 1000)
+
 chap_ess1 <- ess_plot %>% filter(mcmc == "Nonuniform Chaperones longer") %>% 
   filter(variable %in% c("num_clust", "binder_1")) %>%
   mutate(variable  = recode(variable,
@@ -289,7 +291,7 @@ chap_ess1 <- ess_plot %>% filter(mcmc == "Nonuniform Chaperones longer") %>%
          Summary = variable) %>%
   ggplot(aes(x = time, y = ess, col = Summary)) + geom_line(size = 2) + 
   geom_hline(yintercept = 400, linetype = "dashed", size = 2) +
-  xlab("Iteration") + ylab("ESS") + 
+  xlab(bquote('Iteration x '~10^3)) + ylab("ESS") + 
   theme_bw() + theme(text = element_text(size = 25),
                      axis.text.x = element_text(size = 12),
                      axis.text.y = element_text(size = 20))
@@ -304,7 +306,7 @@ chap_ess2 <- ess_plot %>% filter(mcmc == "Nonuniform Chaperones longer") %>%
                             binder_4 = "Reference 4"),
          Summary = variable) %>%
   ggplot(aes(x = time, y = ess_time, col = Summary)) + geom_line(size = 2) +
-  xlab("Iteration") + ylab("ESS / Iteration") + 
+  xlab(bquote('Iteration x '~10^3)) + ylab("ESS / Iteration") + 
   theme_bw() + theme(text = element_text(size = 25),
                      axis.text.x = element_text(size = 12),
                      axis.text.y = element_text(size = 20))
